@@ -48,7 +48,7 @@
 * 8장 - 캐시 계층과 메모리 일관성 문제, 성능 분석 관점.
 * 9장 - 주기억장치 기술 비교(DRAM vs SRAM), 메모리 설계 고려사항.
 
-### 머신러닝 Lv.1
+### 머신러닝 Lv.0 & Lv.1
 * 키워드: **Linear Regression, Logistic Regression, 모델검증, Clustering, Neural Network, Python 실습**
 * 선형회귀 — 선형회귀 개념, 손실함수(MSE), 최소제곱 해법과 평가 지표.
 * 모델 검증 및 평가 — 교차검증, 과적합·과소적합, 평가 지표(정확도·정밀도·재현율·ROC) 설명.
