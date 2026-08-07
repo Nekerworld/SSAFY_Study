@@ -16,6 +16,7 @@
 | [머신러닝 Lv.0](머신러닝%20Lv.0) | 회귀, 분류, 검증, 신경망 등 머신러닝 기초 학습 | 🟢 쉬움 |
 | [머신러닝 Lv.1](머신러닝%20Lv.1) | 회귀, 분류, 검증, 신경망 등 머신러닝 기초 실습 (Lv.0에서 배운 개념들 구현이 주된 내용임) | 🟡 보통 |
 | [머신러닝 Lv. 2](머신러닝%20Lv.%202) | DNN, CNN, RNN, GAN, Transformer, YOLO 등 딥러닝 내용 | 🔴 어려움 |
+| [딥러닝 기초](딥러닝%20기초) | 머신러닝 복습, 딥러닝 기초, DNN, CNN 등 기초적인 딥러닝 내용  | 🟢 쉬움 |
 | [Imbalance & Anomaly Detection](Imbalance%20%26%20Anomaly%20Detection) | 데이터 불균형 문제와 이상 탐지 개념 정리 | 🟡 보통 |
 | [자연어처리](자연어처리) | 텍스트 전처리, Vectorization, Seq2Seq, Word2Vec 등 NLP 학습 | 🔴 어려움 |
 
@@ -69,6 +70,18 @@
 * GAN - GAN의 생성자/판별자 구조와 학습 불안정성, 개선기법 개요.
 * 트랜스포머 - 어텐션 메커니즘과 트랜스포머 구조(병렬 학습·Positional Encoding).
 * 강화학습 - 강화학습의 기본(에이전트·환경·보상)과 간단한 알고리즘 소개.
+
+### 딥러닝 기초
+* 키워드: **Perceptron, MLP, Loss Function, Optimization, Back Propagation, DNN, CNN, Pooling, AlexNet, GoogleNet**
+* 퍼셉트론 - 퍼셉트론의 구조와 회귀·분류 모델의 기본 원리, 학습 과정.
+* 다층 신경망 - MLP 구조와 은닉층의 역할, Forward/Back Propagation을 통한 학습.
+* 손실함수 - Loss Function의 개념과 모델 성능 평가 및 최적화 과정.
+* 최적화 - Gradient Descent 기반 최적화와 학습률 등 학습에 영향을 주는 요소.
+* 심층신경망 - DNN의 구조와 특징, 기존 신경망과의 차이 및 발전 과정.
+* 합성곱신경망 - CNN의 기본 구조와 Convolution·Pooling을 이용한 특징 추출 원리.
+* 이미지 표현 - 이미지의 Tensor 표현과 컬러 이미지 데이터 구조.
+* AlexNet - AlexNet의 네트워크 구조와 CNN 발전에 미친 영향.
+* GoogleNet - Inception 모듈 기반 GoogleNet 구조와 기존 CNN 대비 특징.
 
 ### 네트워크
 * 키워드: **OSI/TCP‑IP, 물리층, 디지털/아날로그 전송, 다중화, 전송매체, 스위칭·교환, 데이터링크(MAC), 오류검출/정정, 이더넷, 무선 LAN**
