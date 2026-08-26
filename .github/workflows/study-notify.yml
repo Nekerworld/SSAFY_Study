@@ -38,7 +38,8 @@ jobs:
         shell: bash
         run: |
           if [ "${{ github.event_name }}" = "push" ]; then
-            FILES=$(git diff --name-only "${{ github.event.before }}" "${{ github.sha }}" -- \
+            FILES=$(git -c core.quotepath=false diff --name-only \
+              "${{ github.event.before }}" "${{ github.sha }}" -- \
               "CS/강의자료/**" \
               "CS/코드/**" \
               "자료구조/강의자료/**" \
@@ -46,7 +47,7 @@ jobs:
               "딥러닝/**" \
               || true)
           else
-            FILES=$(git diff --name-only HEAD^ HEAD -- \
+            FILES=$(git -c core.quotepath=false diff --name-only HEAD^ HEAD -- \
               "CS/강의자료/**" \
               "CS/코드/**" \
               "자료구조/강의자료/**" \
@@ -79,8 +80,8 @@ jobs:
           @channel
           ### 📚 새로운 자료가 업데이트되었습니다!
 
-          **수정된 사항**
-          $COMMIT_MESSAGE
+          **추가된 파일들**
+          $FILE_LIST
 
           **Repository**
           [${{ github.repository }}](https://github.com/${{ github.repository }})
