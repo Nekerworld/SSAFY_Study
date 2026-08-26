@@ -30,7 +30,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          fetch-depth: 0
 
       # 어떤 파일이 변경됐는지 확인
       - name: Find changed files
@@ -38,22 +38,30 @@ jobs:
         shell: bash
         run: |
           if [ "${{ github.event_name }}" = "push" ]; then
-            FILES=$(git diff --name-only HEAD^ HEAD || true)
+            FILES=$(git diff --name-only "${{ github.event.before }}" "${{ github.sha }}" -- \
+              "CS/강의자료/**" \
+              "CS/코드/**" \
+              "자료구조/강의자료/**" \
+              "자료구조/코드/**" \
+              "딥러닝/**" \
+              || true)
           else
-            FILES=$(git diff --name-only HEAD^ HEAD || true)
+            FILES=$(git diff --name-only HEAD^ HEAD -- \
+              "CS/강의자료/**" \
+              "CS/코드/**" \
+              "자료구조/강의자료/**" \
+              "자료구조/코드/**" \
+              "딥러닝/**" \
+              || true)
           fi
 
-          FILTERED=$(echo "$FILES" | grep -E \
-            '^(CS/강의자료/|CS/코드/|자료구조/강의자료/|자료구조/코드/|딥러닝/)' \
-            || true)
-
-          if [ -z "$FILTERED" ]; then
-            FILTERED="변경된 학습 자료를 확인해주세요."
+          if [ -z "$FILES" ]; then
+            FILES="변경된 학습 자료를 확인해주세요."
           fi
 
           {
             echo "files<<EOF"
-            echo "$FILTERED"
+            echo "$FILES"
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
 
