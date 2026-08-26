@@ -101,7 +101,7 @@ jobs:
       # 실제 Mattermost Webhook 호출
       - name: Send notification to Mattermost
         env:
-          MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
+          MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_SEOUL2_STUDY_WEBHOOK_URL }}
           MESSAGE: ${{ steps.message.outputs.message }}
         run: |
           jq -n \
