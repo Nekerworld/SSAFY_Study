@@ -79,14 +79,13 @@ jobs:
           @channel
           ### 📚 새로운 자료가 업데이트되었습니다!
 
-          **변경된 파일**
-          $FILE_LIST
+          **수정된 사항**
+          $COMMIT_MESSAGE
 
           **Repository**
           [${{ github.repository }}](https://github.com/${{ github.repository }})
 
           **Commit**
-          $COMMIT_MESSAGE
           [커밋 내용 확인하기](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
           EOF
           )
