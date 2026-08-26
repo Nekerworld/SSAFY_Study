@@ -64,30 +64,19 @@ jobs:
         env:
           FILES: ${{ steps.changes.outputs.files }}
         run: |
-          FILE_LIST=""
-
-          while IFS= read -r file; do
-            [ -z "$file" ] && continue
-
-            FILE_NAME=$(basename "$file")
-            FILE_URL="https://github.com/${{ github.repository }}/blob/${{ github.sha }}/$file"
-
-            FILE_LIST="${FILE_LIST}- [${FILE_NAME}](${FILE_URL})"$'\n'
-          done <<< "$FILES"
+          FILE_LIST=$(echo "$FILES" | sed 's/^/- /')
 
           MESSAGE=$(cat <<EOF
           @channel
-          ## 📚 새로운 자료가 업데이트되었습니다!
+          ### 📚 새로운 자료가 업데이트되었습니다!
 
-          ### 변경된 파일
+          **변경된 파일**
           $FILE_LIST
-          ### 업로드한 사람
-          \`${{ github.actor }}\`
 
-          ### Repository
+          **Repository**
           [${{ github.repository }}](https://github.com/${{ github.repository }})
 
-          ### Commit
+          **Commit**
           [커밋 내용 확인하기](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
           EOF
           )
