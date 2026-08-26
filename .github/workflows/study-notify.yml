@@ -1,0 +1,116 @@
+name: Mattermost Study Notification
+
+on:
+  # 원하는 순간 GitHub 웹에서 직접 실행 가능
+  workflow_dispatch:
+
+  # 아래 폴더에 변경이 생겨서 push 됐을 때 감지
+  push:
+    branches:
+      - master
+    paths:
+      - "CS/강의자료/**"
+      - "CS/코드/**"
+      - "자료구조/강의자료/**"
+      - "자료구조/코드/**"
+      - "딥러닝/**"
+
+jobs:
+  notify:
+    # 수동 실행이거나,
+    # commit message에 [notify]가 있을 때만 실제 알림 전송
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      contains(github.event.head_commit.message, '[notify]')
+
+    runs-on: ubuntu-latest
+
+    steps:
+      # 저장소 파일을 GitHub Actions 서버로 가져온다.
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      # 어떤 파일이 변경됐는지 확인
+      - name: Find changed files
+        id: changes
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            FILES=$(git diff --name-only HEAD^ HEAD || true)
+          else
+            FILES=$(git diff --name-only HEAD^ HEAD || true)
+          fi
+
+          FILTERED=$(echo "$FILES" | grep -E \
+            '^(CS/강의자료/|CS/코드/|자료구조/강의자료/|자료구조/코드/|딥러닝/)' \
+            || true)
+
+          if [ -z "$FILTERED" ]; then
+            FILTERED="변경된 학습 자료를 확인해주세요."
+          fi
+
+          {
+            echo "files<<EOF"
+            echo "$FILTERED"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      # Mattermost에 보낼 메시지 생성
+      - name: Create Mattermost message
+        id: message
+        shell: bash
+        env:
+          FILES: ${{ steps.changes.outputs.files }}
+        run: |
+          FILE_LIST=""
+
+          while IFS= read -r file; do
+            [ -z "$file" ] && continue
+
+            FILE_NAME=$(basename "$file")
+            FILE_URL="https://github.com/${{ github.repository }}/blob/${{ github.sha }}/$file"
+
+            FILE_LIST="${FILE_LIST}- [${FILE_NAME}](${FILE_URL})"$'\n'
+          done <<< "$FILES"
+
+          MESSAGE=$(cat <<EOF
+          @channel
+          ## 📚 새로운 자료가 업데이트되었습니다!
+
+          ### 변경된 파일
+          $FILE_LIST
+          ### 업로드한 사람
+          \`${{ github.actor }}\`
+
+          ### Repository
+          [${{ github.repository }}](https://github.com/${{ github.repository }})
+
+          ### Commit
+          [커밋 내용 확인하기](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
+          EOF
+          )
+
+          {
+            echo "message<<EOF"
+            echo "$MESSAGE"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      # 실제 Mattermost Webhook 호출
+      - name: Send notification to Mattermost
+        env:
+          MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
+          MESSAGE: ${{ steps.message.outputs.message }}
+        run: |
+          jq -n \
+            --arg text "$MESSAGE" \
+            '{"text": $text}' \
+            | curl --fail \
+              --show-error \
+              --silent \
+              -X POST \
+              -H "Content-Type: application/json" \
+              -d @- \
+              "$MATTERMOST_WEBHOOK_URL"
