@@ -63,6 +63,7 @@ jobs:
         shell: bash
         env:
           FILES: ${{ steps.changes.outputs.files }}
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
         run: |
           FILE_LIST=$(echo "$FILES" | sed 's/^/- /')
 
@@ -77,6 +78,7 @@ jobs:
           [${{ github.repository }}](https://github.com/${{ github.repository }})
 
           **Commit**
+          $COMMIT_MESSAGE
           [커밋 내용 확인하기](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
           EOF
           )
