@@ -74,7 +74,20 @@ jobs:
           FILES: ${{ steps.changes.outputs.files }}
           COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
         run: |
-          FILE_LIST=$(echo "$FILES" | sed 's/^/- /')
+          FILE_LIST=""
+
+          while IFS= read -r FILE; do
+            [ -z "$FILE" ] && continue
+
+            # 한글/공백 등이 포함된 경로 URL 인코딩
+            ENCODED_FILE=$(python3 -c \
+              'import sys, urllib.parse; print(urllib.parse.quote(sys.argv[1]))' \
+              "$FILE")
+
+            DOWNLOAD_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/raw/${GITHUB_SHA}/${ENCODED_FILE}"
+
+            FILE_LIST="${FILE_LIST}- [📥 ${FILE}](${DOWNLOAD_URL})"$'\n'
+          done <<< "$FILES"
 
           MESSAGE=$(cat <<EOF
           @channel
